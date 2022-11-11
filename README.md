@@ -15,7 +15,7 @@ export default function App() {
       })
   };
 
-  // example: listen to progress change
+  // example: listen to change for progress, blob, or eta
   useEffect(() => {
     // TODO...
   }, [progress, blob, eta]);
@@ -34,3 +34,6 @@ export default function App() {
 }
 
 ```
+
+### References
+https://javascript.info/fetch-progress

@@ -14,7 +14,7 @@ const useFetchWithProgress = () => {
   const [eta, setETA] = useState<number>(0);
   const [response, setResponse] = useState<Response | null>(null);
 
-  const fetchWithProgress: FetchWithProgress = (resource, options = {}) =>
+  const fetchWithProgress = (resource: RequestInfo | URL, options = {}) =>
     _fetchWithProgress(resource, options, { setProgress, setETA, setResponse });
 
   return { progress, eta, response, fetchWithProgress };

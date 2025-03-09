@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "tsx"
+    "build": "tsc"
   },
   "keywords": [
     "reactjs",
@@ -23,6 +23,11 @@
   "devDependencies": {
     "@types/react": "^19.0.10",
     "react": "^19.0.0",
+    "tsc": "^2.0.4",
     "typescript": "^5.8.2"
-  }
+  },
+  "files": [
+    "dist/",
+    "types/"
+  ]
 }

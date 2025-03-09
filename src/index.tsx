@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+type Setters = {
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
+  setETA: React.Dispatch<React.SetStateAction<number>>;
+  setResponse: React.Dispatch<React.SetStateAction<Response | null>>;
+};
+
 /**
  * Fetch with progress (especially suitable for large file fetching)
  */
@@ -8,7 +14,7 @@ const useFetchWithProgress = () => {
   const [eta, setETA] = useState<number>(0);
   const [response, setResponse] = useState<Response | null>(null);
 
-  const fetchWithProgress: FetchWithProgress = (resource, options) =>
+  const fetchWithProgress: FetchWithProgress = (resource, options = {}) =>
     _fetchWithProgress(resource, options, { setProgress, setETA, setResponse });
 
   return { progress, eta, response, fetchWithProgress };
@@ -17,7 +23,7 @@ const useFetchWithProgress = () => {
 const _fetchWithProgress = (
   resource: RequestInfo | URL = "",
   options: RequestInit = {},
-  { setProgress, setETA, setResponse }
+  { setProgress, setETA, setResponse }: Setters
 ) => {
   // Fetch
   const responsePromise = fetch(resource, options);
@@ -31,7 +37,7 @@ const _fetchWithProgress = (
  */
 const _processReponse = async (
   responsePromise: Promise<Response>,
-  { setProgress, setETA, setResponse }
+  { setProgress, setETA, setResponse }: Setters
 ) => {
   const response = await responsePromise;
   setResponse(response);

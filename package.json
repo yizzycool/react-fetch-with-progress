@@ -7,6 +7,10 @@
   "repository": "https://github.com/yizzycool/react-fetch-with-progress.git",
   "author": "yizzycool",
   "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build": "tsx"
+  },
   "keywords": [
     "reactjs",
     "fetch",

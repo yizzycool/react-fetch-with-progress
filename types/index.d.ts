@@ -7,5 +7,5 @@ type FetchWithProgressHook = () => {
 
 type FetchWithProgress = (
   resource: RequestInfo | URL,
-  options: RequestInit
+  options?: RequestInit
 ) => Promise<Response>;

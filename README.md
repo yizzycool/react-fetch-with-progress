@@ -1,5 +1,17 @@
 ## React custom hook - useFetchWithProgress
 
+### installation
+
+```bash
+npm i react-fetch-with-progress
+```
+
+or
+
+```bash
+yarn add react-fetch-with-progress
+```
+
 ### usage example
 
 ```js

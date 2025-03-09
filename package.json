@@ -1,0 +1,24 @@
+{
+  "name": "react-fetch-with-progress",
+  "version": "0.0.1",
+  "description": "React hook to fetch anything with progress",
+  "main": "dist/index.js",
+  "types": "types/index.d.ts",
+  "repository": "https://github.com/yizzycool/react-fetch-with-progress.git",
+  "author": "yizzycool",
+  "license": "MIT",
+  "keywords": [
+    "reactjs",
+    "fetch",
+    "hook",
+    "progress"
+  ],
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "react": "^19.0.0",
+    "typescript": "^5.8.2"
+  }
+}

@@ -5,7 +5,7 @@
 ```js
 // React function component:
 export default function App() {
-  const {progress, blob, eta, fetchWithProgress} = useFetchWithProgress();
+  const { progress, eta, response, fetchWithProgress } = useFetchWithProgress();
   const url = 'http[s]://something-to-fetch';
 
   const handleFetchImage = () => {
@@ -15,10 +15,10 @@ export default function App() {
       })
   };
 
-  // example: listen to change for progress, blob, or eta
+  // example: listen to change for progress or eta
   useEffect(() => {
-    // TODO...
-  }, [progress, blob, eta]);
+    // YOUR PROCESS CODE HERE
+  }, [progress, eta]);
   
   return (
     <div>
@@ -36,4 +36,4 @@ export default function App() {
 ```
 
 ### References
-https://javascript.info/fetch-progress
+- [Fetch progress](https://javascript.info/fetch-progress)

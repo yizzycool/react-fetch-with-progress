@@ -8,7 +8,6 @@
   "author": "yizzycool",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
     "build": "tsc"
   },
   "keywords": [

@@ -46,6 +46,3 @@ export default function App() {
 }
 
 ```
-
-### References
-- [Fetch progress](https://javascript.info/fetch-progress)

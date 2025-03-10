@@ -1,6 +1,6 @@
 {
   "name": "react-fetch-with-progress",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "React hook to fetch anything with progress",
   "main": "dist/index.js",
   "types": "types/index.d.ts",

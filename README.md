@@ -38,18 +38,26 @@ const { progress, eta, response, fetchWithProgress } = useFetchWithProgress();
 | `progress` | `number` | Current download progress (0 - 100). |
 | `eta` | `number` | Estimated time remaining (in milliseconds). |
 | `response` | `Response \| null` | The full `fetch` response object. |
-| `fetchWithProgress` | `(url: string, options?: RequestInit) => Promise<Response>` | Function to start fetching with progress tracking. |
+| `fetchWithProgress` | `(url: string, options?: RequestInit, callback?: FetchWithProgressCallback) => Promise<Response>` | Function to start fetching with progress tracking. |
 
 
 ## API Reference
 
-### `fetchWithProgress(url, options?)`
+### `fetchWithProgress(url, options?, callback?)`
 
 #### Parameters:
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `url` | `string` | The API endpoint to fetch data from. |
 | `options` | `RequestInit` _(optional)_ | Optional fetch configuration (headers, method, body, etc.). |
+| `callback` | `FetchWithProgressCallback` _(optional)_ | Optional callback function to track the progress of the request. |
+
+#### FetchWithProgressCallback
+`({ progress, eta }) => void`
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `progress` | `number` | The current progress of the request as a percentage (0-100). |
+| `eta` | `number` | Estimated time remaining for the request to complete, in milliseconds. |
 
 #### Returns:
 `Promise<Response>` - Resolves to the `fetch` response object.
@@ -66,7 +74,7 @@ export default function App() {
 
   const handleFetchImage = () => {
     // Same as native `fetch`
-    fetchWithProgress(url)
+    fetchWithProgress(url, {}, eta)
       .then(response => {
         console.log("Fetch complete!", response);
       })
@@ -75,10 +83,11 @@ export default function App() {
       });
   };
 
-  // Listen to change for progress or eta
-  useEffect(() => {
-    console.log(`Progress: ${progress}% | ETA: ${eta}s`);
-  }, [progress, eta]);
+  // Callback function to track the progress of the request.
+  const callback = ({ progress, eta }) => {
+    console.log(`Progress: ${progress}%`);
+    console.log(`ETA: ${eta}ms`);
+  }
   
   return (
     <div>

@@ -3,12 +3,13 @@
   "version": "1.0.1",
   "description": "React hook to fetch anything with progress",
   "main": "dist/index.js",
+  "browser": "dist/index.min.js",
   "types": "types/index.d.ts",
   "repository": "https://github.com/yizzycool/react-fetch-with-progress.git",
   "author": "yizzycool",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && terser dist/index.js -o dist/index.min.js --compress --mangle"
   },
   "keywords": [
     "reactjs",

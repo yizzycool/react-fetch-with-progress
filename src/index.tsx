@@ -1,5 +1,26 @@
 import { useState } from "react";
 
+export type FetchWithProgress = (
+  resource: RequestInfo | URL,
+  options?: RequestInit,
+  callback?: FetchWithProgressCallback
+) => Promise<Response>;
+
+export type FetchWithProgressHook = () => {
+  progress: number;
+  eta: number;
+  response: Response | null;
+  fetchWithProgress: FetchWithProgress;
+};
+
+export type FetchWithProgressCallback = ({
+  progress,
+  eta,
+}: {
+  progress: number;
+  eta: number;
+}) => void;
+
 type Setters = {
   setProgress: React.Dispatch<React.SetStateAction<number>>;
   setETA: React.Dispatch<React.SetStateAction<number>>;
@@ -9,13 +30,17 @@ type Setters = {
 /**
  * Fetch with progress (especially suitable for large file fetching)
  */
-const useFetchWithProgress = () => {
+const useFetchWithProgress: FetchWithProgressHook = () => {
   const [progress, setProgress] = useState<number>(0);
   const [eta, setETA] = useState<number>(0);
   const [response, setResponse] = useState<Response | null>(null);
 
-  const fetchWithProgress = (resource: RequestInfo | URL, options = {}) =>
-    _fetchWithProgress(resource, options, { setProgress, setETA, setResponse });
+  const fetchWithProgress: FetchWithProgress = (resource, options, callback) =>
+    _fetchWithProgress(resource, options, callback, {
+      setProgress,
+      setETA,
+      setResponse,
+    });
 
   return { progress, eta, response, fetchWithProgress };
 };
@@ -23,12 +48,17 @@ const useFetchWithProgress = () => {
 const _fetchWithProgress = (
   resource: RequestInfo | URL = "",
   options: RequestInit = {},
+  callback: FetchWithProgressCallback = () => {},
   { setProgress, setETA, setResponse }: Setters
 ) => {
   // Fetch
   const responsePromise = fetch(resource, options);
   // Asynchronously update progress
-  _processReponse(responsePromise, { setProgress, setETA, setResponse });
+  _processReponse(responsePromise, callback, {
+    setProgress,
+    setETA,
+    setResponse,
+  });
   return responsePromise;
 };
 
@@ -37,6 +67,7 @@ const _fetchWithProgress = (
  */
 const _processReponse = async (
   responsePromise: Promise<Response>,
+  callback: FetchWithProgressCallback,
   { setProgress, setETA, setResponse }: Setters
 ) => {
   const response = await responsePromise;
@@ -68,8 +99,12 @@ const _processReponse = async (
     }
     chunks.push(value);
     receivedLength += value.length;
-    setProgress((receivedLength * 100) / contentLength);
-    setETA((periodTime * (contentLength - receivedLength)) / receivedLength);
+    const progress = (receivedLength * 100) / contentLength;
+    const eta =
+      (periodTime * (contentLength - receivedLength)) / receivedLength;
+    setProgress(progress);
+    setETA(eta);
+    callback({ progress, eta });
   }
 };
 

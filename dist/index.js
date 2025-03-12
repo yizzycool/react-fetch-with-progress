@@ -11,28 +11,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useFetchWithProgress = void 0;
 const react_1 = require("react");
-/**
- * Fetch with progress (especially suitable for large file fetching)
- */
 const useFetchWithProgress = () => {
     const [progress, setProgress] = (0, react_1.useState)(0);
     const [eta, setETA] = (0, react_1.useState)(0);
     const [response, setResponse] = (0, react_1.useState)(null);
-    const fetchWithProgress = (resource, options = {}) => _fetchWithProgress(resource, options, { setProgress, setETA, setResponse });
+    const fetchWithProgress = (resource, options, callback) => _fetchWithProgress(resource, options, callback, {
+        setProgress,
+        setETA,
+        setResponse,
+    });
     return { progress, eta, response, fetchWithProgress };
 };
 exports.useFetchWithProgress = useFetchWithProgress;
-const _fetchWithProgress = (resource = "", options = {}, { setProgress, setETA, setResponse }) => {
-    // Fetch
+const _fetchWithProgress = (resource = "", options = {}, callback = () => { }, { setProgress, setETA, setResponse }) => {
     const responsePromise = fetch(resource, options);
-    // Asynchronously update progress
-    _processReponse(responsePromise, { setProgress, setETA, setResponse });
+    _processReponse(responsePromise, callback, {
+        setProgress,
+        setETA,
+        setResponse,
+    });
     return responsePromise;
 };
-/**
- * Update progress and ETA
- */
-const _processReponse = (responsePromise_1, _a) => __awaiter(void 0, [responsePromise_1, _a], void 0, function* (responsePromise, { setProgress, setETA, setResponse }) {
+const _processReponse = (responsePromise_1, callback_1, _a) => __awaiter(void 0, [responsePromise_1, callback_1, _a], void 0, function* (responsePromise, callback, { setProgress, setETA, setResponse }) {
     var _b;
     const response = yield responsePromise;
     setResponse(response);
@@ -40,18 +40,13 @@ const _processReponse = (responsePromise_1, _a) => __awaiter(void 0, [responsePr
     const reader = (_b = clonedResponse.body) === null || _b === void 0 ? void 0 : _b.getReader();
     if (!reader)
         return;
-    // Get contentLength (in format of number) to calculate progress and ETA
     const contentLength = +(clonedResponse.headers.get("content-length") || 0);
-    // Received data length so far
     let receivedLength = 0;
-    // Received data chunks so far
     let chunks = [];
     const startTime = performance.now();
     while (true) {
-        // Read data chunk
         const { done, value } = yield reader.read();
         const periodTime = performance.now() - startTime;
-        // If fetch completed
         if (done) {
             setProgress(100);
             setETA(0);
@@ -59,8 +54,11 @@ const _processReponse = (responsePromise_1, _a) => __awaiter(void 0, [responsePr
         }
         chunks.push(value);
         receivedLength += value.length;
-        setProgress((receivedLength * 100) / contentLength);
-        setETA((periodTime * (contentLength - receivedLength)) / receivedLength);
+        const progress = (receivedLength * 100) / contentLength;
+        const eta = (periodTime * (contentLength - receivedLength)) / receivedLength;
+        setProgress(progress);
+        setETA(eta);
+        callback({ progress, eta });
     }
 });
 exports.default = useFetchWithProgress;

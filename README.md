@@ -74,7 +74,7 @@ export default function App() {
 
   const handleFetchImage = () => {
     // Same as native `fetch`
-    fetchWithProgress(url, {}, eta)
+    fetchWithProgress(url, {}, callback)
       .then(response => {
         console.log("Fetch complete!", response);
       })
